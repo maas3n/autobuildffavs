@@ -32,11 +32,11 @@ This script automates the dependency fetching, configuration, compilation, and i
 1. **Clone or Download** the script to your Debian environment.
 2. **Make it executable:**
    ```bash
-   chmod +x build.sh
+   chmod +x autobuildffavs.sh
    ```
 3. **Run the script:**
    ```bash
-   ./build.sh
+   ./autobuildffavs.sh
    ```
 
 ### Optional Flags
@@ -46,7 +46,7 @@ You can append the following arguments when running the script to modify its beh
 
 *Example:*
 ```bash
-./build.sh --clean --update
+./autobuildffavs.sh --clean --update
 ```
 
 ## 📦 What gets installed?
