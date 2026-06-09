@@ -1,7 +1,8 @@
+[README.md](https://github.com/user-attachments/files/28731026/README.md)
 # Debian 13 Multimedia Build Script: FFmpeg + AviSynthPlus + FFMS2 + yadifmod2
 #
 # For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason.
-# this script provides an automated #build solution.
+# This script provides an automated build solution
 #
 
 
