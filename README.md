@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/28731026/README.md)
 # Debian 13 Multimedia Build Script: FFmpeg + AviSynthPlus + FFMS2 + yadifmod2
 #
 # For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason.
@@ -39,16 +38,6 @@ This script automates the dependency fetching, configuration, compilation, and i
    ./autobuildffavs.sh
    ```
 
-### Optional Flags
-You can append the following arguments when running the script to modify its behavior:
-* `--clean`: Removes old build directories before compiling to ensure a completely fresh build.
-* `--update`: Pulls the latest commits and submodule updates from the respective GitHub repositories before building.
-
-*Example:*
-```bash
-./autobuildffavs.sh --clean --update
-```
-
 ## 📦 What gets installed?
 
 ### Part 1: FFmpeg & AviSynthPlus
@@ -73,3 +62,5 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 ## 📝 Notes
 * The script automatically overrides `checkinstall` defaults (`INSTALL=1`, `FADDALL=1`, `TRANSLATE=0`) to ensure smooth unattended packaging without interactive prompts.
 * If you run into any path issues with plugins later, ensure your AviSynth scripts correctly reference `/usr/local/lib/avisynth/`.
+
+
