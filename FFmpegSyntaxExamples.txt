@@ -1,52 +1,56 @@
-# EXAMPLE OF USAGE(for educational purposes only)
-
+# EXAMPLE OF USAGE
+#
 # Demux your source (in this case, a Blu-ray REMUX with x1 main video stream in H264 & x1 main audio stream in AC-3 )
-
+#
 ffmpeg -i SOURCE.mkv -map 0:v -c:v copy input.mkv -map 0:a -c:a copy audio.ac3
-
+#
 # preview your videofile in mpv (sudo apt install mpv) for visuals
-
+#
 mpv -i template.avs
-
+#
 # priview your videofile in ffprobe for values
-
+#
 ffprobe -i template.avs
-
+#
 # After optimizing your template.avs script: Trimming (if needed), Deinterlacing (if needed), Cropping (if needed), Resizing (if needed)
 # run the template.avs in ffmpeg for test encodes (optimizing your x264 parameters if needed)
 # when satisfied with the result, add a # in front of line 12 in your template.avs script to remove the Trim
 #
 # (in this case, i have set aq mode to 1, aq strengt to 0.80, psy-rd to 0.95,0.00, disabled mbtree, etc)
 # (I am not the right person to explain the purpose and use of all x264 parameters
-# but theres a lof of info out there on differen forums about what the different x264 parameters will do to your video)
-
+# but theres a lof of info out there on differen forums about what the different x264 parameters will do to your video) 
+# PS: The correct way to do this is to encode in 2pass while testing/tuning the parameters, comparing the results (b frames) with the source. 
+# Then switch back to crf when satisfied, aiming for the highest compression (crf) without losing visual quality-
+# -while again comparing b frames with the source. start at 18. if no visual quality loss, go up 19, if visual quality loss try 18.5 etc. 
+# sometimes you need to go lower than 18. Most important: There's no correct answers key. you need to use your eyes, comparing.
+# But again, im not going to make a "x264 advanced encoding guide" 
+#
 # Now start encoding your video file
-
+#
 ffmpeg -i template.avs -c:v libx264 -pix_fmt yuv420p -profile:v high -preset veryslow -x264opts crf=18:level=4.1:fps=23.976:aq-mode=1:deblock=-3,-3:aq-strength=0.80:psy-rd=0.95,0.00:dct-decimate=0:mbtree=0:fast-pskip=0 encode.mkv
-
+#
 # Now mux the encoded video and the audio file to mkv
-
+#
 ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv 
-
-# OPTIONAL(for educational purposes only)
+#
+# OPTIONAL1(for educational purposes only)
 #
 # You can also add subtitles, metadata, and titles for the tracks inside the mkv
 # (in this case i have a separate .srt file in English, a separate chapter file saved as .txt in the right formatting)
 # 
 # Now start muxing
-
+#
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -map 0 -map 1 -map 2 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
-
-THATS IT!
-or..
-
-## OPTIONAL
-## If you want to include Chapters
-
+#
+#
+# OPTIONAL2(for educational purposes only)
+#
+# If you want to include Chapters
+#
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
-
-PS: Chapters template in right formatting (save as .txt)
-
+#
+# PS: Chapters template in right formatting (save as .txt)
+#
 
 ;FFMETADATA1
 title=Title of The Movie
@@ -80,3 +84,5 @@ TIMEBASE=1/1000
 START=720500
 END=800000
 title=Chapter 4: End Credits
+
+#Thats it!
