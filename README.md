@@ -1,11 +1,9 @@
-# Debian 13 Multimedia Build Script: FFmpeg + AviSynthPlus + FFMS2 + yadifmod2
-#
-# For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason.
-# This script provides an automated build solution
+# FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 build script
+For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
+AviSynthPlus template script & FFmpeg syntaxes with AviSynthPlus (2pass explained) is included in the repo
 
-The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie). 
-
-This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.
+* **The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie)** 
+* **This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.**
 
 **Author:** maas3n
 
@@ -65,7 +63,7 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 #
 # Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)
 # template.avs
-
+```
 # Enable debugging and log all errors to home directory
 SetLogParams("/home/YOURUSERNAME/AviSynthPlusdebug.log", 4)
 #
@@ -86,7 +84,7 @@ Yadifmod2(mode=1, order=1)
 Crop(2, 2, -2, -2)
 # Resize
 Spline36Resize(1024, 576)
-
+```
 #
 # Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, sx264 params (2pass explained)
 # 
@@ -94,15 +92,21 @@ Spline36Resize(1024, 576)
 #
 # Demux your source (in this case, a Blu-ray REMUX with x1 main video stream in H264 & x1 main audio stream in AC-3 )
 #
+```
 ffmpeg -i SOURCE.mkv -map 0:v -c:v copy input.mkv -map 0:a -c:a copy audio.ac3
+```
 #
 # preview your videofile in mpv (sudo apt install mpv) for visuals
 #
+```
 mpv -i template.avs
+```
 #
 # priview your videofile in ffprobe for values
 #
+```
 ffprobe -i template.avs
+```
 #
 # After optimizing your template.avs script: Trimming (if needed), Deinterlacing (if needed), Cropping (if needed), Resizing (if needed)
 # run the template.avs in ffmpeg for test encodes (optimizing your x264 parameters if needed)
@@ -119,11 +123,15 @@ ffprobe -i template.avs
 #
 # Now start encoding your video file
 #
+```
 ffmpeg -i template.avs -c:v libx264 -pix_fmt yuv420p -profile:v high -preset veryslow -x264opts crf=18:level=4.1:fps=23.976:aq-mode=1:deblock=-3,-3:aq-strength=0.80:psy-rd=0.95,0.00:dct-decimate=0:mbtree=0:fast-pskip=0 encode.mkv
+```
 #
 # Now mux the encoded video and the audio file to mkv
 #
-ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv 
+```
+ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv
+```
 #
 # OPTIONAL1(for educational purposes only)
 #
@@ -132,17 +140,22 @@ ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv
 # 
 # Now start muxing
 #
+```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -map 0 -map 1 -map 2 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
+```
 #
 #
 # OPTIONAL2(for educational purposes only)
 #
 # If you want to include Chapters
 #
+```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
+```
 #
 # PS: Chapters template in right formatting (save as .txt)
 #
+```
 ;FFMETADATA1
 title=Title of The Movie
 artist=Director or Studio Name
@@ -175,8 +188,6 @@ TIMEBASE=1/1000
 START=720500
 END=800000
 title=Chapter 4: End Credits
-
-# Thats it!
 
 
 
