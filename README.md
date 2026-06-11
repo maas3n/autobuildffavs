@@ -1,10 +1,9 @@
-# FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 build script
-For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
-
--AviSynthPlus template script & FFmpeg syntaxes with AviSynthPlus (2pass explained) is included in the repo-
-
+# FFmpeg+AviSynthPlus+FFMS2+yadifmod2 build script
+## For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
 * **The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie)** 
 * **This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.**
+
+##### -AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params uasage (and 2pass explained) is included in the repo-
 
 **Author:** maas3n
 
@@ -61,9 +60,10 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 * If you run into any path issues with plugins later, ensure your AviSynth scripts correctly reference `/usr/local/lib/avisynth/`.
 * Use the template.avs for correct path's
 * Take a look into FFmpegAvisynthSyntaxExamples.txt for examples of usage
-#
-# Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)
-# template.avs
+
+## 📄 Templates & Examples
+* **Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)**
+### template.avs
 ```
 # Enable debugging and log all errors to home directory
 SetLogParams("/home/YOURUSERNAME/AviSynthPlusdebug.log", 4)
@@ -86,8 +86,8 @@ Crop(2, 2, -2, -2)
 # Resize
 Spline36Resize(1024, 576)
 ```
-* **Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, sx264 params (2pass explained)**
-EXAMPLE OF USAGE:
+### Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, sx264 params and (2pass explained)
+#### EXAMPLE OF USAGE:
 Demux your source (in this case, a Blu-ray REMUX with x1 main video stream in H264 & x1 main audio stream in AC-3 )
 ```
 ffmpeg -i SOURCE.mkv -map 0:v -c:v copy input.mkv -map 0:a -c:a copy audio.ac3
