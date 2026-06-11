@@ -3,7 +3,7 @@
 * **The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie)** 
 * **This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.**
 
-##### -AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params uasage (and 2pass explained) is included in the repo-
+-AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params uasage (and 2pass explained) is included in the repo-
 
 **Author:** maas3n
 
