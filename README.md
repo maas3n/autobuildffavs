@@ -27,11 +27,17 @@ AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usa
 ## 🛠️ Usage
 
 1. **Clone or Download** the script to your Debian environment.
-2. **Make it executable:**
+2. ### Download
+[Download via browser](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+**Or download via terminal:**
+```bash
+wget [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+```
+3. **Make it executable:**
    ```bash
    chmod +x autobuildffavs.sh
    ```
-3. **Run the script:**
+4. **Run the script:**
    ```bash
    ./autobuildffavs.sh
    ```
