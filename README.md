@@ -36,6 +36,10 @@ AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usa
 ```bash
 wget [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
 ```
+###### curl
+```bash
+curl -LO [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+```
 3. **Make it executable:**
    ```bash
    chmod +x autobuildffavs.sh
@@ -81,6 +85,10 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 ###### wget
 ```bash
 wget [https://github.com/maas3n/autobuildffavs/raw/main/template.avs](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+```
+###### curl
+```bash
+curl -LO [https://github.com/maas3n/autobuildffavs/raw/main/template.avs](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
 ```
 ### template.avs
 ```
