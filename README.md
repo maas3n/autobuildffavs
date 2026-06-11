@@ -2,8 +2,6 @@
 #
 # For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason.
 # This script provides an automated build solution
-#
-
 
 The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie). 
 
@@ -60,8 +58,10 @@ This script automates the dependency fetching, configuration, compilation, and i
 With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipeline is optimized for high-quality processing. You can seamlessly utilize standard deinterlacing alongside preferred scaling algorithms, like `Spline36Resize`, directly within your `.avs` scripts.
 
 ## 📝 Notes
-* The script automatically overrides `checkinstall` defaults (`INSTALL=1`, `FADDALL=1`, `TRANSLATE=0`) to ensure smooth unattended packaging without interactive prompts.
+* The script automatically overrides `checkinstall` defaults (`INSTALL=1`, `FADDALL=1`, `TRANSLATE=0`)
 * If you run into any path issues with plugins later, ensure your AviSynth scripts correctly reference `/usr/local/lib/avisynth/`.
+* Use the template.avs for correct path's
+* Take a look into FFmpegAvisynthSyntaxExamples.txt for examples of usage
 #
 # Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)
 # template.avs
@@ -88,8 +88,7 @@ Crop(2, 2, -2, -2)
 Spline36Resize(1024, 576)
 
 #
-[FFmpegAvisynthSyntaxExamples.txt](https://github.com/user-attachments/files/28850190/FFmpegAvisynthSyntaxExamples.txt)
-# Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlu, sx264 params (2pass explained)
+# Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, sx264 params (2pass explained)
 # 
 # EXAMPLE OF USAGE
 #
@@ -176,8 +175,8 @@ TIMEBASE=1/1000
 START=720500
 END=800000
 title=Chapter 4: End Credits
-#
-#Thats it!
+
+# Thats it!
 
 
 
