@@ -3,7 +3,7 @@
 * **The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie)** 
 * **This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.**
 
--AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params uasage (and 2pass explained) is included in the repo-
+-AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usage (and 2pass explained) is included in the repo-
 
 **Author:** maas3n
 
@@ -86,7 +86,7 @@ Crop(2, 2, -2, -2)
 # Resize
 Spline36Resize(1024, 576)
 ```
-### Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, sx264 params and (2pass explained)
+* **Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, x264 params usage (and 2pass explained)**
 #### EXAMPLE OF USAGE:
 Demux your source (in this case, a Blu-ray REMUX with x1 main video stream in H264 & x1 main audio stream in AC-3 )
 ```
@@ -100,17 +100,7 @@ priview your videofile in ffprobe for values
 ```
 ffprobe -i template.avs
 ```
-#After optimizing your template.avs script: Trimming (if needed), Deinterlacing (if needed), Cropping (if needed), Resizing (if needed)
-#run the template.avs in ffmpeg for test encodes (optimizing your x264 parameters if needed)
-#when satisfied with the result, add a # in front of line 12 in your template.avs script to remove the Trim
-#(in this case, i have set aq mode to 1, aq strengt to 0.80, psy-rd to 0.95,0.00, disabled mbtree, etc)
-#(I am not the right person to explain the purpose and use of all x264 parameters
-#but theres a lof of info out there on differen forums about what the different x264 parameters will do to your video) 
-#PS: The correct way to do this is to encode in 2pass while testing/tuning the parameters, comparing the results (b frames) with the source. 
-#Then switch back to crf when satisfied, aiming for the highest compression (crf) without losing visual quality-
-#-while again comparing b frames with the source. start at 18. if no visual quality loss, go up 19, if visual quality loss try 18.5 etc. 
-#sometimes you need to go lower than 18. Most important: There's no correct answers key. you need to use your eyes, comparing.
-#But again, im not going to make a "x264 advanced encoding guide" 
+##### After optimizing your template.avs script: Trimming (if needed), Deinterlacing (if needed), Cropping (if needed), Resizing (if needed) run the template.avs in ffmpeg for test encodes (optimizing your x264 parameters if needed) When satisfied with the result, add a # in front of line 12 in your template.avs script to remove the Trim (in this case, i have set aq mode to 1, aq strengt to 0.80, psy-rd to 0.95,0.00, disabled mbtree, etc) (I am not the right person to explain the purpose and use of all x264 parameters but theres a lof of info out there on differen forums about what the different x264 parameters will do to your video) PS: The correct way to do this is to encode in 2pass while testing/tuning the parameters, comparing the results (b frames) with the source. Then switch back to crf when satisfied, aiming for the highest compression (crf) without losing visual quality while again comparing b frames with the source. start at 18. if no visual quality loss, go up 19, if visual quality loss try 18.5 etc. Sometimes you need to go lower than 18. Most important: There's no correct answers key. you need to use your eyes, comparing. But again, im not going to make a "x264 advanced encoding guide" 
 
 Now start encoding your video file
 ```
@@ -120,19 +110,19 @@ Now mux the encoded video and the audio file to mkv
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv
 ```
-#OPTIONAL1(for educational purposes only)
+#### OPTIONAL1(for educational purposes only)
 #You can also add subtitles, metadata, and titles for the tracks inside the mkv
 #(in this case i have a separate .srt file in English, a separate chapter file saved as .txt in the right formatting) 
 Now start muxing
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -map 0 -map 1 -map 2 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
 ```
-#OPTIONAL2(for educational purposes only)
+#### OPTIONAL2(for educational purposes only)
 If you want to include Chapters
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
 ```
-PS: Chapters template in right formatting (save as .txt):
+#### PS: Chapters template in right formatting (save as .txt):
 ```
 ;FFMETADATA1
 title=Title of The Movie
