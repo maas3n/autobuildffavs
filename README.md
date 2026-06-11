@@ -28,8 +28,11 @@ AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usa
 
 1. **Clone or Download** the script to your Debian environment.
 2. ### Download
+
 [Download via browser](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
-**Or download via terminal:**
+
+**Or**
+###### wget
 ```bash
 wget [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
 ```
@@ -71,6 +74,14 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 
 ## 📄 Templates & Examples
 * **Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)**
+
+[Download via browser](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+
+**Or**
+###### wget
+```bash
+wget [https://github.com/maas3n/autobuildffavs/raw/main/template.avs](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+```
 ### template.avs
 ```
 # Enable debugging and log all errors to home directory
