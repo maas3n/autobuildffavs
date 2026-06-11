@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/28855715/README.md)
+[README.md](https://github.com/user-attachments/files/28856311/README.md)
 ## FFmpeg+AviSynthPlus+FFMS2+yadifmod2 build script
 
 #### For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
@@ -114,17 +114,22 @@ ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv
 ```
 #### OPTIONAL1(for educational purposes only)
 #You can also add subtitles, metadata, and titles for the tracks inside the mkv
+
 #(in this case i have a separate .srt file in English, a separate chapter file saved as .txt in the right formatting) 
+
 Now start muxing
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -map 0 -map 1 -map 2 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
 ```
 #### OPTIONAL2(for educational purposes only)
-If you want to include Chapters
+#If you want to include Chapters
+
+Now start muxing
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
 ```
-#### PS: Chapters template in right formatting (save as .txt):
+#### Chapters template in right formatting (save as .txt):
+### chapters.txt
 ```
 ;FFMETADATA1
 title=Title of The Movie
@@ -160,7 +165,3 @@ END=800000
 title=Chapter 4: End Credits
 ```
 # Thats it!
-
-
-
-
