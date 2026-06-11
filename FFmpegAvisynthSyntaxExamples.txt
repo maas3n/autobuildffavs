@@ -51,6 +51,7 @@ ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 
 #
 # PS: Chapters template in right formatting (save as .txt)
 #
+
 ;FFMETADATA1
 title=Title of The Movie
 artist=Director or Studio Name
@@ -83,5 +84,5 @@ TIMEBASE=1/1000
 START=720500
 END=800000
 title=Chapter 4: End Credits
-#
+
 #Thats it!
