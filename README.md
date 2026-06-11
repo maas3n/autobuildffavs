@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/28855715/README.md)
 ## FFmpeg+AviSynthPlus+FFMS2+yadifmod2 build script
 
 #### For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
