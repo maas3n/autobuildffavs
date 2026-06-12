@@ -1,0 +1,32 @@
+;FFMETADATA1
+title=Title of The Movie
+artist=Director or Studio Name
+date=2026
+description=A brief synopsis of the movie.
+
+; The section above is the Global Metadata. 
+; The line ;FFMETADATA1 is absolutely mandatory and must be the very first line.
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=120000
+title=Chapter 1: The Opening
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=120000
+END=345000
+title=Chapter 2: The Setup
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=345000
+END=720500
+title=Chapter 3: The Climax
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=720500
+END=800000
+title=Chapter 4: End Credits
