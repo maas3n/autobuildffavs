@@ -1,3 +1,13 @@
+<div align="right">
+
+##### Donation
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" width="14" height="14"> <small>**BTC:** `bc1q79hj2zukfmm75278a7wssjmexanuhvs5nequel`</small>
+
+</div>
+
+#
+#
+#
 [README.md](https://github.com/user-attachments/files/28856311/README.md)
 ## FFmpeg+AviSynthPlus+FFMS2+yadifmod2 build script
 
@@ -200,4 +210,3 @@ START=720500
 END=800000
 title=Chapter 4: End Credits
 ```
-# Thats it!
