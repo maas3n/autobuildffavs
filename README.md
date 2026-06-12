@@ -27,9 +27,7 @@ AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usa
 ## 🛠️ Usage
 
 1. **Clone or Download** the script to your Debian environment.
-2. ### Download
-
-[Download via browser](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+2. [Download "autobuildffavs.sh" via browser](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
 
 **Or**
 ###### wget
@@ -79,7 +77,7 @@ With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipelin
 ## 📄 Templates & Examples
 * **Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)**
 
-[Download via browser](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+[Download "template.avs" via browser](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
 
 **Or**
 ###### wget
@@ -153,7 +151,20 @@ Now start muxing
 ```
 ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
 ```
-#### Chapters template in right formatting (save as .txt):
+#### Chapters template in FFMETADATA1 formatting (save as .txt)
+**Or**
+
+[Download "chapters.txt" via browser](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
+
+**Or**
+###### wget
+```bash
+wget [https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
+```
+###### curl
+```bash
+curl -LO [https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
+```
 ### chapters.txt
 ```
 ;FFMETADATA1
