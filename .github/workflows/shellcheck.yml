@@ -1,0 +1,37 @@
+name: Shell checks
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - autobuildffavs.sh
+      - .github/workflows/shellcheck.yml
+  pull_request:
+    paths:
+      - autobuildffavs.sh
+      - .github/workflows/shellcheck.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shell-checks:
+    name: bash -n and ShellCheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        run: bash -n autobuildffavs.sh
+
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: shellcheck autobuildffavs.sh

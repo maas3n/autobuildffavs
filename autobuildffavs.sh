@@ -6,7 +6,15 @@
 
 set -Eeuo pipefail
 
-trap 'rc=$?; printf "\nERROR: command failed at line %d: %s (exit %d)\n" "$LINENO" "$BASH_COMMAND" "$rc" >&2; exit "$rc"' ERR
+on_error() {
+    local rc="$1"
+    local line_no="$2"
+    local command="$3"
+
+    printf '\nERROR: command failed at line %d: %s (exit %d)\n' "$line_no" "$command" "$rc" >&2
+    exit "$rc"
+}
+trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 
 readonly FFMPEG_VERSION="7.1.5"
 readonly FFMPEG_REF="n${FFMPEG_VERSION}"
@@ -18,7 +26,8 @@ readonly FFMS2_VERSION="5.0"
 readonly FFMS2_REF="${FFMS2_VERSION}"
 readonly FFMS2_COMMIT="7ed5e4d039ca9a6236bd2ebdfdd656c4304fbe04"
 readonly YADIFMOD2_COMMIT="9db5d2118dc2800701c5137afcfe45f3163211da"
-readonly DEFAULT_JOBS="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
+DEFAULT_JOBS="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
+readonly DEFAULT_JOBS
 readonly DEFAULT_WORK_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/autobuildffavs"
 
 CLEAN_BUILD=false
@@ -141,7 +150,7 @@ preflight_os() {
 
     if [ "$id" != "debian" ] || [ "$version_id" != "13" ]; then
         if [ "$ALLOW_UNSUPPORTED" = true ]; then
-            echo "WARNING: detected ${PRETTY_NAME:-$id $version_id}; this project targets Debian 13." >&2
+            echo "WARNING: detected ${PRETTY_NAME:-$id $version_id}; this project targets Debian 12." >&2
             return
         fi
         echo "ERROR: detected ${PRETTY_NAME:-$id $version_id}; this project targets Debian 13 (Trixie)." >&2
