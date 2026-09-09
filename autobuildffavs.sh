@@ -540,7 +540,7 @@ build_yadifmod2() {
     yadif_lib="$(
         awk -v prefix="$plugin_dir/" '
             index($0, prefix) == 1 &&
-            $0 ~ /\/libyadifmod2[^/]*\.so\.[^/]+$/ { print }
+            $0 ~ /\/libyadifmod2(\.so\.[^/]+|\.[^/]+\.so)$/ { print }
         ' "$install_manifest" |
             while IFS= read -r candidate; do
                 if [ -e "$candidate" ]; then
