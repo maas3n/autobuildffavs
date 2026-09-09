@@ -366,7 +366,8 @@ If autobuildffavs is useful to you and you'd like to support its development, Bi
 
 ## License
 
-No open-source license has been selected for MattMux yet. The source is publicly viewable in this repository, but no additional reuse/distribution rights are granted until a license is added.
+autobuildffavs is licensed under the [MIT License](LICENSE).
 
-FFmpeg, AviSynthPlus, and other third-party projects remain governed by their own licenses.
+The MIT License applies to the original code, scripts, templates, examples, and documentation in this repository. Third-party projects downloaded, built, linked, or otherwise used by autobuildffavs — including **FFmpeg**, **AviSynth+**, **FFMS2**, **yadifmod2**, and their dependencies — remain governed by their own respective licenses and copyright terms.
 
+The MIT License for autobuildffavs does not grant additional rights to redistribute third-party software or binaries produced from those projects. In particular, see the FFmpeg licensing notice above regarding builds made with `--enable-nonfree`.
