@@ -1,190 +1,311 @@
-<div align="right">
+# FFmpeg + AviSynth+ + FFMS2 + yadifmod2 build script
 
-##### Donation
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" width="14" height="14"> <small>**BTC:** `bc1q79hj2zukfmm75278a7wssjmexanuhvs5nequel`</small>
+**Current source version:** `v2.0.0`
 
-</div>
+For users who want to run FFmpeg natively with AviSynth+ on Debian, this project provides an automated source-build workflow for the complete toolchain.
 
-#
-#
-#
-[README.md](https://github.com/user-attachments/files/28856311/README.md)
-## FFmpeg+AviSynthPlus+FFMS2+yadifmod2 build script
-
-#### For those who want to use FFmpeg natively with AviSynthPlus on Debian for whatever reason. This script provides an automated build solution
-
-AviSynthPlus template script, FFmpeg syntaxes with AviSynthPlus, x264 params usage (and 2pass explained) is included in the repo
-* **The script compiles and installs FFmpeg + AviSynthPlus + FFMS2 + yadifmod2 from source on Debian 13 (Trixie)** 
-* **This script automates the dependency fetching, configuration, compilation, and installation of FFmpeg and native Linux AviSynthPlus, alongside frame serving & deinterlacing plugins.**
+The repository also includes an AviSynth+ template, FFmpeg/AviSynth+ command examples, x264 parameter examples, and notes on CRF and two-pass encoding.
 
 **Author:** maas3n
 
 ## ✨ Features
 
-* **Comprehensive Pipeline:** Builds **FFmpeg 7.1.3** (with non-free components and AviSynth support), **AviSynthPlus**, **FFMS2**, and **yadifmod2** from source.
-* **Clean Package Management:** Integrates `checkinstall` and installs FFmpeg + AvisynthPlus using checkinstall, to manage the compiled binaries as standard Debian packages, keeping your system clean and making uninstallation straightforward via `apt`.
-* **Standard Build Systems:** Exclusively relies on standard `CMake` and `Make` workflows for compilation, entirely avoiding the need for Ninja or other alternative build systems.
-* **WSL Ready:** Extensively tested to run flawlessly on Debian 13 running via Windows Subsystem for Linux (WSL), perfect for users passing local Windows file paths into native Linux scripts.
-* **Core Optimizations:** To speed up compile times.
+- **Complete native pipeline:** Builds and installs **FFmpeg 7.1.5**, **AviSynth+ 3.7.5**, **FFMS2 5.0**, and **yadifmod2** from source.
+- **Pinned source revisions:** FFmpeg, AviSynth+, and FFMS2 tags are verified against hard-coded immutable commit hashes before checkout; yadifmod2 is pinned directly to a commit. AviSynth+ submodules are initialized only after the pinned superproject revision has been verified and checked out.
+- **AviSynth-enabled FFmpeg:** FFmpeg is built with GPL/non-free components and native AviSynth support.
+- **Debian package tracking:** FFmpeg and AviSynth+ are installed through `checkinstall`, making them visible to Debian package-management tools and easier to remove later.
+- **Less invasive configuration:** The script does not edit `/etc/checkinstallrc`; required `checkinstall` behavior is selected on the command line. Runtime linker paths are kept in the project-specific `/etc/ld.so.conf.d/autobuildffavs.conf` file.
+- **Debian 13 preflight:** The script verifies Debian 13 (Trixie) before installing packages. `--allow-unsupported` can bypass the check explicitly.
+- **Configurable parallel compilation:** Uses all available CPU cores by default, or a user-selected count via `--jobs N` or `JOBS=N`.
+- **Dedicated workspace:** Source and build trees live under `${XDG_CACHE_HOME:-$HOME/.cache}/autobuildffavs` by default, or a custom `--work-dir`/`WORK_DIR` path.
+- **Safer reruns:** Existing repositories are reused only when their `origin` matches the expected upstream repository. Modified/staged/deleted tracked source files cause a hard failure instead of being overwritten; untracked build products are left alone so normal reruns still work. `--clean` recreates known build output without deleting arbitrary user directories.
+- **End-to-end verification:** In addition to library/version checks, the script creates a temporary test clip and processes it through AviSynth + FFMS2 + yadifmod2 before reporting success.
 
 ## 🚀 Prerequisites
 
-* **OS:** Debian 13 (Trixie) – *Bare metal, VM, or WSL.*
-* **Debian Sources:** Ensure your APT sources (e.g., `/etc/apt/sources.list.d/debian.sources`) are configured to include `contrib`, `non-free`, and `non-free-firmware`.
-* **Permissions:** Root (`sudo`) access is required to install dependencies and run `checkinstall`/`make install`.
-* **Network:** An active internet connection to download packages from `apt` and clone repositories from GitHub.
+- **OS:** Debian 13 (Trixie) — bare metal, VM, or WSL. Other systems are rejected by default because package names and build assumptions are Debian-13-specific.
+- **APT sources:** Ensure your Debian sources (for example `/etc/apt/sources.list.d/debian.sources`) include `contrib`, `non-free`, and `non-free-firmware`. `libfdk-aac-dev` requires the non-free component.
+- **Permissions:** `sudo` access is required for package installation, `checkinstall`, linker configuration, and system-wide installation under `/usr/local`.
+- **Network:** An active internet connection is required for APT packages and GitHub repositories.
 
-## 🛠️ Usage
+## 🛠️ Installation and usage
 
-1. **Clone or Download** the script to your Debian environment.
-2. [Download "autobuildffavs.sh" via browser](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+### 1. Download the build script
 
-**Or**
-###### wget
+Latest `v2.0.0` source from the `main` branch:
+
 ```bash
-wget [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+wget https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
 ```
-###### curl
+
+or:
+
 ```bash
-curl -LO [https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh](https://github.com/maas3n/autobuildffavs/releases/download/v1.0.0/autobuildffavs.sh)
+curl -LO https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
 ```
-3. **Make it executable:**
-   ```bash
-   chmod +x autobuildffavs.sh
-   ```
-4. **Run the script:**
-   ```bash
-   ./autobuildffavs.sh
-   ```
+
+You can also clone the repository and use the copy included there.
+
+### 2. Make the script executable
+
+```bash
+chmod +x autobuildffavs.sh
+```
+
+### 3. Run it
+
+```bash
+./autobuildffavs.sh
+```
+
+### Optional flags
+
+```text
+--clean                 Remove/recreate build output before compiling.
+--update                Refresh remote Git metadata before checking out pins.
+--jobs N                Use N parallel compilation jobs (default: all CPUs).
+--work-dir PATH         Store source/build trees under PATH.
+--allow-unsupported     Bypass the Debian 13 version check; APT/package assumptions still apply.
+--help, -h              Show usage information.
+```
+
+Environment variables can also set the two most common resource/location options:
+
+```bash
+JOBS=4 WORK_DIR="$HOME/build/autobuildffavs" ./autobuildffavs.sh
+```
+
+Example with flags:
+
+```bash
+./autobuildffavs.sh --clean --update --jobs 4
+```
+
+> The build is pinned to **FFmpeg 7.1.5** (`n7.1.5` → `3a0867c2bfda4a4d4309ca1a8cbdc6175e67f587`), **AviSynth+ 3.7.5** (`v3.7.5` → `6c7c26617a6675eec89e4d4a3565ed709df6511f`), **FFMS2 5.0** (`5.0` → `7ed5e4d039ca9a6236bd2ebdfdd656c4304fbe04`), and yadifmod2 commit **`9db5d2118dc2800701c5137afcfe45f3163211da`**. `--update` may refresh tags/remote metadata, but the script rejects any tag that no longer resolves to its expected immutable commit.
 
 ## 📦 What gets installed?
 
-### Part 1: FFmpeg & AviSynthPlus
-* Installs all required core dependencies, libraries, and codecs (`libx264`, `libx265`, `libdav1d`, `libvpx`, etc.).
-* Clones and builds **AviSynthPlus**. Packaged via `checkinstall`.
-* Clones **FFmpeg** (checkout `n7.1.3`), configured with `--enable-gpl`, `--enable-nonfree`, and `--enable-avisynth`. Packaged via `checkinstall`.
-* Updates the runtime linker bindings so libraries in `/usr/local/lib` are immediately recognized.
+### Part 1: AviSynth+ and FFmpeg
+
+- Installs the required compilers, build tools, libraries, codecs, and development packages.
+- Clones/reuses **AviSynth+**, verifies that tag **`v3.7.5`** resolves to the pinned commit, checks it out, updates its submodules, and packages it through `checkinstall`.
+- Clones/reuses **FFmpeg**, verifies that tag **`n7.1.5`** resolves to the pinned commit, checks it out, and builds it with options including `--enable-gpl`, `--enable-nonfree`, and `--enable-avisynth`.
+- Packages the custom FFmpeg build through `checkinstall`.
+- Supplies `--install=yes` and `--fstrans=no` directly to `checkinstall` instead of changing global `/etc/checkinstallrc` defaults.
+- Configures the runtime linker through `/etc/ld.so.conf.d/autobuildffavs.conf` so `/usr/local/lib` and `/usr/local/lib64` are recognized.
 
 ### Part 2: FFMS2 (FFmpegSource)
-* Fetches the latest stable release tag of FFMS2.
-* Configures it with AviSynthPlus support
-* Compiles and installs natively, allowing frame-accurate access to video files within AviSynth scripts.
+
+- Clones/reuses FFMS2, verifies that release tag **`5.0`** resolves to the pinned commit, and checks it out.
+- Configures FFMS2 with AviSynth+ support.
+- Compiles and installs it under `/usr/local` for frame-accurate source access from AviSynth scripts.
 
 ### Part 3: yadifmod2
-* Clones the native Linux fork of `yadifmod2`.
-* Compiles the plugin using `CMake` and `Make`.
-* Installs the resulting `.so` file directly into `/usr/local/lib/avisynth/` and generates the necessary symlinks so AviSynthPlus can load it.
 
-## 🎬 Workflow Integration
-With `yadifmod2` installed alongside native AviSynthPlus and FFMS2, your pipeline is optimized for high-quality processing. You can seamlessly utilize standard deinterlacing alongside preferred scaling algorithms, like `Spline36Resize`, directly within your `.avs` scripts.
+- Clones/reuses the native Linux-capable fork of `yadifmod2` and checks out commit **`9db5d2118dc2800701c5137afcfe45f3163211da`**.
+- Compiles the plugin with `CMake` and `Make` using the configured job count.
+- Installs it under `/usr/local/lib/avisynth/`.
+- Reads CMake's install manifest to identify the versioned yadifmod2 library installed by the current build, then creates `/usr/local/lib/avisynth/libyadifmod2.so` without hard-coding the `.so` filename or accidentally selecting a stale older installation.
+
+## ✅ Final verification
+
+The script does not report success until it has checked that:
+
+- the `ffmpeg` found in `PATH` reports version **7.1.5**;
+- FFmpeg exposes the `avisynth` demuxer;
+- the FFMS2 shared library is installed under `/usr/local` and has no missing dynamic-library dependencies;
+- `/usr/local/lib/avisynth/libyadifmod2.so` exists, resolves correctly, and has no missing dynamic-library dependencies;
+- a temporary FFV1 test clip can be opened by `FFVideoSource`, processed by `Yadifmod2`, and decoded through FFmpeg's AviSynth demuxer.
+
+Temporary smoke-test files are created with `mktemp` and removed automatically on exit.
+
+If one of these checks fails, the script exits with an error instead of printing a misleading success message.
+
+## 🎬 Workflow integration
+
+With yadifmod2 installed alongside native AviSynth+ and FFMS2, you can create `.avs` processing scripts and feed them directly into FFmpeg. This supports workflows such as frame-accurate source loading, deinterlacing, cropping, and resizing with filters such as `Spline36Resize`.
 
 ## 📝 Notes
-* The script automatically overrides `checkinstall` defaults (`INSTALL=1`, `FADDALL=1`, `TRANSLATE=0`)
-* If you run into any path issues with plugins later, ensure your AviSynth scripts correctly reference `/usr/local/lib/avisynth/`.
-* Use the template.avs for correct path's
-* Take a look into FFmpegAvisynthSyntaxExamples.txt for examples of usage
 
-## 📄 Templates & Examples
-* **Script template for AviSynthPlus (tested & confirmed working after running the autobuildffavs.sh script)**
+- The default source/build workspace is `${XDG_CACHE_HOME:-$HOME/.cache}/autobuildffavs`; use `--work-dir PATH` or `WORK_DIR=PATH` if you want it elsewhere.
+- Reused Git repositories must have the expected GitHub `origin`. HTTPS, GitHub SSH, and `git://github.com/` forms are normalized before comparison.
+- The script refuses to build when tracked source files are modified, staged, or deleted. It intentionally ignores untracked files because the supported build systems create untracked build products during ordinary reruns.
+- `--clean` removes only known component build directories inside the workspace. It no longer removes a fixed `$HOME/yadifmod2_build` directory.
+- `--update` fetches tags/remote metadata, but the actual source revisions remain pinned to hard-coded commits; if an upstream tag is moved, the script stops instead of following it.
+- `--allow-unsupported` bypasses only the Debian 13 version check. The dependency names, APT workflow, and other build assumptions remain Debian-oriented.
+- The script does **not** edit `/etc/checkinstallrc`; command-line options override the relevant `checkinstall` defaults for each package operation.
+- If you encounter plugin-loading issues, verify the paths used in your AviSynth script, especially `/usr/local/lib/avisynth/`.
+- See `template.avs` for a working path/layout example.
+- See `FFmpegAvisynthx264SyntaxExamples.txt` for additional FFmpeg and AviSynth+ usage examples.
 
-[Download "template.avs" via browser](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+## 📄 AviSynth+ template
 
-**Or**
-###### wget
+Download `template.avs`:
+
 ```bash
-wget [https://github.com/maas3n/autobuildffavs/raw/main/template.avs](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+wget https://github.com/maas3n/autobuildffavs/raw/main/template.avs
 ```
-###### curl
+
+or:
+
 ```bash
-curl -LO [https://github.com/maas3n/autobuildffavs/raw/main/template.avs](https://github.com/maas3n/autobuildffavs/raw/main/template.avs)
+curl -LO https://github.com/maas3n/autobuildffavs/raw/main/template.avs
 ```
-### template.avs
-```
-# Enable debugging and log all errors to home directory
+
+### `template.avs`
+
+```avs
+# Enable debugging and log errors to your home directory
 SetLogParams("/home/YOURUSERNAME/AviSynthPlusdebug.log", 4)
-#
-# Load your source plugin explicitly if not autoloaded
+
+# Load source plugin explicitly if it is not autoloaded
 LoadPlugin("/usr/local/lib/libffms2.so")
-# Load your native Linux yadifmod2 plugin
+
+# Load the native Linux yadifmod2 plugin
 LoadPlugin("/usr/local/lib/avisynth/libyadifmod2.so")
-#
-# Open your video file using FFMS2
+
+# Open the source with FFMS2
 FFVideoSource("/home/YOURUSERNAME/input.mkv")
-# Cut for test encode
+
+# Optional short section for test encodes
 Trim(7200, 7272)
+
 # Deinterlace
-# (mode=1, order=1) If your video is top field first
-# (mode=1, order=0) If your video is bottom field first
+# order=1: top field first
+# order=0: bottom field first
 Yadifmod2(mode=1, order=1)
+
 # Crop
 Crop(2, 2, -2, -2)
+
 # Resize
 Spline36Resize(1024, 576)
 ```
-* **Examples of FFmpeg & AviSynthPlus usage: FFmpeg syntaxes with AviSynthPlus, x264 params usage (and 2pass explained)**
-#### EXAMPLE OF USAGE:
-Demux your source (in this case, a Blu-ray REMUX with x1 main video stream in H264 & x1 main audio stream in AC-3 )
-```
-ffmpeg -i SOURCE.mkv -map 0:v -c:v copy input.mkv -map 0:a -c:a copy audio.ac3
-```
-preview your videofile in mpv (sudo apt install mpv) for visuals
-```
-mpv -i template.avs
-```
-priview your videofile in ffprobe for values
-```
-ffprobe -i template.avs
-```
-##### After optimizing your template.avs script: Trimming (if needed), Deinterlacing (if needed), Cropping (if needed), Resizing (if needed) run the template.avs in ffmpeg for test encodes (optimizing your x264 parameters if needed) When satisfied with the result, add a # in front of line 12 in your template.avs script to remove the Trim (in this case, i have set aq mode to 1, aq strengt to 0.80, psy-rd to 0.95,0.00, disabled mbtree, etc) (I am not the right person to explain the purpose and use of all x264 parameters but theres a lof of info out there on differen forums about what the different x264 parameters will do to your video) PS: The correct way to do this is to encode in 2pass while testing/tuning the parameters, comparing the results (b frames) with the source. Then switch back to crf when satisfied, aiming for the highest compression (crf) without losing visual quality while again comparing b frames with the source. start at 18. if no visual quality loss, go up 19, if visual quality loss try 18.5 etc. Sometimes you need to go lower than 18. Most important: There's no correct answers key. you need to use your eyes, comparing. But again, im not going to make a "x264 advanced encoding guide" 
 
-Now start encoding your video file
+Adjust `/home/YOURUSERNAME/` and the source-specific processing values for your own system and video.
+
+## 🎞️ Example workflow
+
+The following example assumes a Blu-ray REMUX containing one H.264 video stream and one AC-3 audio stream.
+
+### 1. Demux video and audio
+
+```bash
+ffmpeg -i SOURCE.mkv \
+  -map 0:v -c:v copy input.mkv \
+  -map 0:a -c:a copy audio.ac3
 ```
-ffmpeg -i template.avs -c:v libx264 -pix_fmt yuv420p -profile:v high -preset veryslow -x264opts crf=18:level=4.1:fps=23.976:aq-mode=1:deblock=-3,-3:aq-strength=0.80:psy-rd=0.95,0.00:dct-decimate=0:mbtree=0:fast-pskip=0 encode.mkv
+
+### 2. Preview the AviSynth output
+
+Install mpv if necessary:
+
+```bash
+sudo apt install mpv
 ```
-Now mux the encoded video and the audio file to mkv
+
+Then preview the script:
+
+```bash
+mpv template.avs
 ```
+
+Inspect it with ffprobe:
+
+```bash
+ffprobe template.avs
+```
+
+### 3. Test and tune the encode
+
+Use a short `Trim()` section in `template.avs` while evaluating deinterlacing, cropping, resizing, and encoder settings. When you are satisfied, remove or comment out the `Trim()` line before the final encode.
+
+There is no universal CRF value or x264 tuning recipe that is correct for every source. A common starting point is CRF 18, followed by visual comparisons against the source and adjustment according to your quality and size goals.
+
+CRF and two-pass encoding serve different rate-control goals:
+
+- **CRF** targets a chosen quality level while allowing file size/bitrate to vary.
+- **Two-pass bitrate encoding** is useful when you need to target a particular average bitrate or output size.
+
+You do not need to use two-pass encoding before switching to CRF. Choose the rate-control method that matches your final goal, and use representative test samples when tuning other x264 parameters.
+
+### 4. Encode through AviSynth+
+
+Example based on the original project's x264 settings:
+
+```bash
+ffmpeg -i template.avs \
+  -c:v libx264 \
+  -pix_fmt yuv420p \
+  -profile:v high \
+  -preset veryslow \
+  -x264-params "crf=18:level=4.1:fps=23.976:aq-mode=1:deblock=-3,-3:aq-strength=0.80:psy-rd=0.95,0.00:dct-decimate=0:mbtree=0:fast-pskip=0" \
+  encode.mkv
+```
+
+The values above are examples, not universal recommendations. Tune them for the source and your own quality/size requirements.
+
+### 5. Mux the encoded video and original audio
+
+```bash
 ffmpeg -i encode.mkv -i audio.ac3 -c copy finish.mkv
 ```
-#### OPTIONAL1(for educational purposes only)
-#You can also add subtitles, metadata, and titles for the tracks inside the mkv
 
-#(in this case i have a separate .srt file in English, a separate chapter file saved as .txt in the right formatting) 
+## Optional: subtitles and track metadata
 
-Now start muxing
-```
-ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -map 0 -map 1 -map 2 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
-```
-#### OPTIONAL2(for educational purposes only)
-#If you want to include Chapters
+Example with an external English `.srt` subtitle:
 
-Now start muxing
-```
-ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt -map 0 -map 1 -map 2 -map_metadata 3 -map_chapters 3 -c copy -metadata:s:v:0 title="Title of The Movie" -metadata:s:a:0 language=eng -metadata:s:a:0 title="English Audio" -metadata:s:s:0 language=eng -metadata:s:s:0 title="English SubRip" finish.mkv
-```
-#### Chapters template in FFMETADATA1 formatting (save as .txt)
-**Or**
-
-[Download "chapters.txt" via browser](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
-
-**Or**
-###### wget
 ```bash
-wget [https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
+ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt \
+  -map 0 -map 1 -map 2 \
+  -c copy \
+  -metadata:s:v:0 title="Title of The Movie" \
+  -metadata:s:a:0 language=eng \
+  -metadata:s:a:0 title="English Audio" \
+  -metadata:s:s:0 language=eng \
+  -metadata:s:s:0 title="English SubRip" \
+  finish.mkv
 ```
-###### curl
+
+## Optional: chapters
+
+Download the chapter template:
+
 ```bash
-curl -LO [https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt](https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt)
+wget https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt
 ```
-### chapters.txt
+
+or:
+
+```bash
+curl -LO https://github.com/maas3n/autobuildffavs/raw/main/chapters.txt
 ```
+
+Mux chapters from an FFmetadata file:
+
+```bash
+ffmpeg -i encode.mkv -i audio.ac3 -i subtitle.srt -i chapters.txt \
+  -map 0 -map 1 -map 2 \
+  -map_metadata 3 -map_chapters 3 \
+  -c copy \
+  -metadata:s:v:0 title="Title of The Movie" \
+  -metadata:s:a:0 language=eng \
+  -metadata:s:a:0 title="English Audio" \
+  -metadata:s:s:0 language=eng \
+  -metadata:s:s:0 title="English SubRip" \
+  finish.mkv
+```
+
+### `chapters.txt` template
+
+```ini
 ;FFMETADATA1
 title=Title of The Movie
 artist=Director or Studio Name
 date=2026
 description=A brief synopsis of the movie.
 
-; The section above is the Global Metadata. 
-; The line ;FFMETADATA1 is absolutely mandatory and must be the very first line.
+; FFMETADATA1 must be the first line of the file.
 
 [CHAPTER]
 TIMEBASE=1/1000
@@ -210,3 +331,9 @@ START=720500
 END=800000
 title=Chapter 4: End Credits
 ```
+
+## ⚠️ Important
+
+This script installs source-built software under `/usr/local` and writes `/etc/ld.so.conf.d/autobuildffavs.conf` so the runtime linker can find `/usr/local/lib` and `/usr/local/lib64`. It does not edit `/etc/checkinstallrc`. Review the script before running it, especially on systems where `/usr/local` already contains custom multimedia libraries.
+
+Because the FFmpeg build enables both `--enable-gpl` and `--enable-nonfree` (including `libfdk-aac`), FFmpeg documents the resulting binary as **unredistributable**. This repository distributes the build script, not compiled FFmpeg binaries. See https://ffmpeg.org/legal.html for FFmpeg licensing guidance.
