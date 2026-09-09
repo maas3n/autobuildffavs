@@ -1,0 +1,108 @@
+name: Publish v2.0.0 release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.repository == 'maas3n/autobuildffavs'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Finalize tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          python3 <<'PY'
+          from pathlib import Path
+
+          readme = Path("README.md")
+          text = readme.read_text()
+          replacements = {
+              "Latest `v2.0.0` source from the `main` branch:": "Release download (`v2.0.0`):",
+              "wget https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh": "wget https://github.com/maas3n/autobuildffavs/releases/download/v2.0.0/autobuildffavs.sh",
+              "curl -LO https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh": "curl -LO https://github.com/maas3n/autobuildffavs/releases/download/v2.0.0/autobuildffavs.sh",
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f"README text not found: {old}")
+              text = text.replace(old, new, 1)
+
+          license_text = (
+              "No open-source license has been selected for autobuildffavs yet. "
+              "The source is publicly viewable in this repository, but no additional "
+              "reuse/distribution rights are granted until a license is added. "
+              "FFmpeg, AviSynthPlus, and other third-party projects remain governed "
+              "by their own licenses."
+          )
+          if "## License" not in text:
+              text = text.rstrip() + "\n\n## License\n\n" + license_text + "\n"
+          readme.write_text(text)
+
+          changelog = Path("CHANGELOG.md")
+          ctext = changelog.read_text()
+          marker = "- Added GitHub Actions checks for Bash syntax and ShellCheck.\n"
+          addition = "- Added a repository license-status notice clarifying that no open-source license has been selected.\n"
+          if addition not in ctext:
+              if marker not in ctext:
+                  raise SystemExit("CHANGELOG insertion point not found")
+              ctext = ctext.replace(marker, marker + addition, 1)
+          changelog.write_text(ctext)
+          PY
+
+          git add README.md CHANGELOG.md LICENSE
+          git rm .github/workflows/publish-v2-release.yml
+          git commit -m "Finalize v2.0.0 release"
+          git push origin HEAD:main
+
+          tag="v2.0.0"
+          git tag -a "$tag" -m "autobuildffavs v2.0.0"
+          git push origin "$tag"
+
+          cat > /tmp/release-notes.md <<'EOF'
+          # autobuildffavs v2.0.0
+
+          v2.0.0 is a reproducibility, safety, and verification update for the Debian 13 source-build workflow.
+
+          Highlights:
+          - FFmpeg 7.1.5, AviSynth+ 3.7.5, FFMS2 5.0, and yadifmod2 are pinned to verified immutable revisions.
+          - Reused source repositories are checked for the expected upstream origin and tracked local modifications.
+          - Build workspace and job count are configurable.
+          - Global `/etc/checkinstallrc` is no longer modified.
+          - yadifmod2 installation no longer relies on a hard-coded versioned `.so` filename.
+          - Final verification checks FFmpeg/AviSynth support, shared-library dependencies, and runs an end-to-end AviSynth + FFMS2 + yadifmod2 smoke test.
+          - Documentation and x264/FFmpeg examples were refreshed, and Bash syntax/ShellCheck CI was added.
+
+          This release distributes the build script and supporting templates/examples, not compiled FFmpeg binaries. The configured FFmpeg build uses `--enable-nonfree` with `libfdk-aac`; see the README for redistribution guidance.
+          EOF
+
+          sha256sum \
+            autobuildffavs.sh \
+            template.avs \
+            FFmpegAvisynthx264SyntaxExamples.txt \
+            chapters.txt \
+            > SHA256SUMS.txt
+
+          gh release create "$tag" \
+            autobuildffavs.sh \
+            template.avs \
+            FFmpegAvisynthx264SyntaxExamples.txt \
+            chapters.txt \
+            SHA256SUMS.txt \
+            --title "autobuildffavs v2.0.0" \
+            --notes-file /tmp/release-notes.md
