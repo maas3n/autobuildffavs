@@ -30,6 +30,24 @@ The repository also includes an AviSynth+ template, FFmpeg/AviSynth+ command exa
 
 ## 🛠️ Installation and usage
 
+### Quick install from `main`
+
+Using `wget`:
+
+```bash
+wget -O autobuildffavs.sh https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
+chmod +x autobuildffavs.sh
+./autobuildffavs.sh
+```
+
+Using `curl`:
+
+```bash
+curl -fL -o autobuildffavs.sh https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
+chmod +x autobuildffavs.sh
+./autobuildffavs.sh
+```
+
 ### 1. Download the build script
 
 Release download (`v2.0.0`):
