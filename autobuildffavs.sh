@@ -637,6 +637,7 @@ verify_installation() {
     version_line="$(ffmpeg -version 2>/dev/null | sed -n '1p')"
     echo "$version_line"
     actual_version="$(awk '{print $3}' <<<"$version_line")"
+    actual_version="${actual_version#n}"
 
     if [ "$actual_version" != "$FFMPEG_VERSION" ]; then
         echo "ERROR: expected FFmpeg ${FFMPEG_VERSION}, but found version '${actual_version:-unknown}'." >&2
