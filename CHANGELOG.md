@@ -39,6 +39,7 @@ This file summarizes notable repository changes.
 - Added a redistribution warning for the FFmpeg build produced with `--enable-nonfree` and `libfdk-aac`.
 - Cleaned up the FFmpeg/AviSynth/x264 examples, including modernized command syntax and clearer CRF versus two-pass guidance.
 - Added GitHub Actions checks for Bash syntax and ShellCheck.
+- Added a repository license-status notice clarifying that no open-source license has been selected.
 
 ## v1.0.0 — 2026-06-11
 

@@ -39,16 +39,16 @@ The repository also includes an AviSynth+ template, FFmpeg/AviSynth+ command exa
 
 ### 1. Download the build script
 
-Latest `v2.0.0` source from the `main` branch:
+Release download (`v2.0.0`):
 
 ```bash
-wget https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
+wget https://github.com/maas3n/autobuildffavs/releases/download/v2.0.0/autobuildffavs.sh
 ```
 
 or:
 
 ```bash
-curl -LO https://raw.githubusercontent.com/maas3n/autobuildffavs/main/autobuildffavs.sh
+curl -LO https://github.com/maas3n/autobuildffavs/releases/download/v2.0.0/autobuildffavs.sh
 ```
 
 You can also clone the repository and use the copy included there.
@@ -344,3 +344,7 @@ title=Chapter 4: End Credits
 This script installs source-built software under `/usr/local` and writes `/etc/ld.so.conf.d/autobuildffavs.conf` so the runtime linker can find `/usr/local/lib` and `/usr/local/lib64`. It does not edit `/etc/checkinstallrc`. Review the script before running it, especially on systems where `/usr/local` already contains custom multimedia libraries.
 
 Because the FFmpeg build enables both `--enable-gpl` and `--enable-nonfree` (including `libfdk-aac`), FFmpeg documents the resulting binary as **unredistributable**. This repository distributes the build script, not compiled FFmpeg binaries. See https://ffmpeg.org/legal.html for FFmpeg licensing guidance.
+
+## License
+
+No open-source license has been selected for autobuildffavs yet. The source is publicly viewable in this repository, but no additional reuse/distribution rights are granted until a license is added. FFmpeg, AviSynthPlus, and other third-party projects remain governed by their own licenses.
