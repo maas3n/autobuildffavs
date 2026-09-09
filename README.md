@@ -1,10 +1,3 @@
-<div align="right">
-
-##### Donation
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" width="14" height="14"> <small>**BTC:** `bc1q79hj2zukfmm75278a7wssjmexanuhvs5nequel`</small>
-
-</div>
-
 # FFmpeg + AviSynth+ + FFMS2 + yadifmod2 build script
 
 **Current source version:** `v2.0.0`
@@ -345,6 +338,17 @@ This script installs source-built software under `/usr/local` and writes `/etc/l
 
 Because the FFmpeg build enables both `--enable-gpl` and `--enable-nonfree` (including `libfdk-aac`), FFmpeg documents the resulting binary as **unredistributable**. This repository distributes the build script, not compiled FFmpeg binaries. See https://ffmpeg.org/legal.html for FFmpeg licensing guidance.
 
+## Support autobuildffavs
+If autobuildffavs is useful to you and you'd like to support its development, Bitcoin donations are appreciated but entirely optional.
+<div align="left">
+  
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" width="14" height="14"> <small>**BTC:** `bc1q79hj2zukfmm75278a7wssjmexanuhvs5nequel`</small>
+
+</div>
+
 ## License
 
-No open-source license has been selected for autobuildffavs yet. The source is publicly viewable in this repository, but no additional reuse/distribution rights are granted until a license is added. FFmpeg, AviSynthPlus, and other third-party projects remain governed by their own licenses.
+No open-source license has been selected for MattMux yet. The source is publicly viewable in this repository, but no additional reuse/distribution rights are granted until a license is added.
+
+FFmpeg, AviSynthPlus, and other third-party projects remain governed by their own licenses.
+
